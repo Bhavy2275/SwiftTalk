@@ -23,7 +23,9 @@ app.use(cookieParser());
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
-  "https://swift-talk.onrender.com"
+  "https://swift-talk.onrender.com",
+  "https://swift-talk.vercel.app",
+  "https://swift-talk-frontend.vercel.app"
 ];
 
 app.use(
