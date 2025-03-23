@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../utils/axiosInstance";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,19 +19,16 @@ const LoginPage = () => {
     e.preventDefault();
     if (!formData.email || !formData.password) return toast.error("Please fill all fields");
 
-    setIsLoading(true);
     try {
-      const res = await axiosInstance.post("/auth/login", { email: formData.email, password: formData.password });
-      if (res.data.needsVerification) {
+      const result = await login(formData.email, formData.password);
+      if (result.needsVerification) {
         // Redirect to verification page with email
-        navigate("/verify-email", { state: { email: res.data.email } });
+        navigate("/verify-email", { state: { email: result.email } });
         return;
       }
       navigate("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");
-    } finally {
-      setIsLoading(false);
     }
   };
 
