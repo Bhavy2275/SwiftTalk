@@ -2,7 +2,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
 import HomePage from "./pages/HomePage";
-import SignUpPage from "./pages/SignUpPage";
+import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -40,7 +40,7 @@ const App = () => {
       <div className="flex-1 container mx-auto px-4 py-8">
         <Routes>
           <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />} />
-          <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
+          <Route path="/signup" element={!authUser ? <SignupPage /> : <Navigate to="/" />} />
           <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
