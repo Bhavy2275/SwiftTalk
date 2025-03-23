@@ -44,9 +44,16 @@ app.use(
   })
 );
 
-// API routes
+// API routes - handle both prefixed and non-prefixed paths
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/auth", authRoutes);
+app.use("/messages", messageRoutes);
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 
 // Serve static files in production
 if (process.env.NODE_ENV === "production") {
@@ -58,7 +65,13 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-server.listen(PORT, () => {
-  console.log(`Server is running on PORT: ${PORT}`);
-  connectDB();
-});
+// Only start the server if we're not in a Vercel environment
+if (!process.env.VERCEL) {
+  server.listen(PORT, () => {
+    console.log(`Server is running on PORT: ${PORT}`);
+    connectDB();
+  });
+}
+
+// Export the Express app for Vercel
+export default app;
