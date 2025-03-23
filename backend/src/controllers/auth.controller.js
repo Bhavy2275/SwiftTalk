@@ -40,7 +40,15 @@ export const signup = async (req, res) => {
 
     if (newUser) {
       // Send verification email
-      await sendVerificationEmail(email, otp);
+      const emailSent = await sendVerificationEmail(email, otp);
+      
+      if (!emailSent) {
+        // If email fails, delete the user and return error
+        await User.findByIdAndDelete(newUser._id);
+        return res.status(500).json({ 
+          message: "Failed to send verification email. Please try again later." 
+        });
+      }
       
       // generate jwt token here
       generateToken(newUser._id, res);
@@ -74,6 +82,15 @@ export const login = async (req, res) => {
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
       return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    // Check if email is verified
+    if (!user.isEmailVerified) {
+      return res.status(400).json({ 
+        message: "Please verify your email before logging in",
+        needsVerification: true,
+        email: user.email
+      });
     }
 
     generateToken(user._id, res);

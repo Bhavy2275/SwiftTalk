@@ -3,6 +3,9 @@ import { useAuthStore } from "../store/useAuthStore";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../utils/axiosInstance";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,10 +14,26 @@ const LoginPage = () => {
     password: "",
   });
   const { login, isLoggingIn } = useAuthStore();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login(formData);
+    if (!formData.email || !formData.password) return toast.error("Please fill all fields");
+
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.post("/auth/login", { email: formData.email, password: formData.password });
+      if (res.data.needsVerification) {
+        // Redirect to verification page with email
+        navigate("/verify-email", { state: { email: res.data.email } });
+        return;
+      }
+      navigate("/");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login failed");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
