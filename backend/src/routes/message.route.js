@@ -1,5 +1,6 @@
 import express from "express";
 import { protectRoute } from "../middleware/auth.middleware.js";
+import { upload } from "../middleware/multer.middleware.js";
 import { getMessages, getUsersForSidebar, sendMessage, updateMessageStatus } from "../controllers/message.controller.js";
 
 const router = express.Router();
@@ -7,7 +8,7 @@ const router = express.Router();
 router.get("/users", protectRoute, getUsersForSidebar);
 router.get("/:id", protectRoute, getMessages);
 
-router.post("/send/:id", protectRoute, sendMessage);
+router.post("/send/:id", protectRoute, upload.single("image"), sendMessage);
 router.patch("/status/:messageId", protectRoute, updateMessageStatus);
 
 export default router;

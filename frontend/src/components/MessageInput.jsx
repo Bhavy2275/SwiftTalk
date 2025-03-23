@@ -16,6 +16,12 @@ const MessageInput = () => {
       return;
     }
 
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size should be less than 5MB");
+      return;
+    }
+
     const reader = new FileReader();
     reader.onloadend = () => {
       setImagePreview(reader.result);
@@ -33,9 +39,13 @@ const MessageInput = () => {
     if (!text.trim() && !imagePreview) return;
 
     try {
+      // Get the actual file from the file input
+      const file = fileInputRef.current?.files[0];
+      
       await sendMessage({
         text: text.trim(),
         image: imagePreview,
+        file: file // Pass the actual file
       });
 
       // Clear form
@@ -44,6 +54,7 @@ const MessageInput = () => {
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
       console.error("Failed to send message:", error);
+      toast.error("Failed to send message. Please try again.");
     }
   };
 
@@ -88,7 +99,7 @@ const MessageInput = () => {
 
           <button
             type="button"
-            className={`hidden sm:flex btn btn-circle
+            className={`btn btn-circle
                      ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
             onClick={() => fileInputRef.current?.click()}
           >
@@ -100,7 +111,7 @@ const MessageInput = () => {
           className="btn btn-sm btn-circle"
           disabled={!text.trim() && !imagePreview}
         >
-          <Send size={22} />
+          <Send size={20} />
         </button>
       </form>
     </div>

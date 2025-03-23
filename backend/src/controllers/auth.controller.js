@@ -134,38 +134,48 @@ export const checkAuth = (req, res) => {
 
 export const verifyEmail = async (req, res) => {
   const { email, otp } = req.body;
+  console.log("Verification request received:", { email, otp });
+  
   try {
     const user = await User.findOne({ email });
+    console.log("User found:", user ? "Yes" : "No");
 
     if (!user) {
+      console.log("User not found");
       return res.status(400).json({ message: "User not found" });
     }
 
     if (user.isEmailVerified) {
+      console.log("Email already verified");
       return res.status(400).json({ message: "Email is already verified" });
     }
 
     if (!user.emailVerificationOTP || !user.emailVerificationOTPExpires) {
+      console.log("No verification request found");
       return res.status(400).json({ message: "No verification request found" });
     }
 
     if (user.emailVerificationOTPExpires < new Date()) {
+      console.log("OTP expired");
       return res.status(400).json({ message: "OTP has expired" });
     }
 
     if (user.emailVerificationOTP !== otp) {
+      console.log("Invalid OTP");
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
+    console.log("Verifying email...");
     user.isEmailVerified = true;
     user.emailVerificationOTP = null;
     user.emailVerificationOTPExpires = null;
     await user.save();
 
-    res.status(200).json({ message: "Email verified successfully" });
+    console.log("Email verified successfully");
+    return res.status(200).json({ message: "Email verified successfully" });
   } catch (error) {
-    console.log("Error in verifyEmail controller", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error in verifyEmail controller:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

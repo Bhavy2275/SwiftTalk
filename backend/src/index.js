@@ -22,6 +22,7 @@ app.use(cookieParser());
 // CORS configuration
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:3000",
   "https://swift-talk.onrender.com"
 ];
 

@@ -12,7 +12,7 @@ const Footer = () => {
           <div className="text-center">
             <p className="font-medium mb-2">Frontend</p>
             <p>Madeeha</p>
-            <p>Haijra</p>
+            <p>hajira</p>
             <p>Amit Barman</p>
           </div>
           <div className="text-center">

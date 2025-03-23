@@ -33,8 +33,13 @@ const SignUpPage = () => {
     const success = validateForm();
 
     if (success === true) {
-      await signup(formData);
-      navigate("/");
+      try {
+        await signup(formData);
+        // Navigate to verification page with email
+        navigate("/verify-email", { state: { email: formData.email } });
+      } catch (error) {
+        toast.error(error.message || "Signup failed");
+      }
     }
   };
 
@@ -147,7 +152,6 @@ const SignUpPage = () => {
       </div>
 
       {/* right side */}
-
       <AuthImagePattern
         title="Join our community"
         subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
@@ -155,4 +159,5 @@ const SignUpPage = () => {
     </div>
   );
 };
+
 export default SignUpPage;
