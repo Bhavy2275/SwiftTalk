@@ -23,9 +23,9 @@ app.use(cookieParser());
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
-  "https://swift-talk.onrender.com",
   "https://swift-talk.vercel.app",
-  "https://swift-talk-frontend.vercel.app"
+  "https://swift-talk-frontend.vercel.app",
+  "https://swift-talk-frontend-git-main-bhavyas-projects-c9ef28e4.vercel.app"
 ];
 
 app.use(
@@ -39,6 +39,8 @@ app.use(
       return callback(null, true);
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
   })
 );
 
