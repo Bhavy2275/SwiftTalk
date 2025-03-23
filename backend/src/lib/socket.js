@@ -10,8 +10,7 @@ const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:5173",
-      "https://swift-talk.onrender.com",
-      "https://swift-talk-frontend.onrender.com"
+      "https://swift-talk.onrender.com"
     ],
     methods: ["GET", "POST"],
     credentials: true

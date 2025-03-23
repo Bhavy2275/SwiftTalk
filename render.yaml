@@ -1,8 +1,10 @@
 services:
   - type: web
-    name: swift-talk-backend
+    name: swift-talk
     env: node
-    buildCommand: cd backend && npm install
+    buildCommand: |
+      cd backend && npm install
+      cd ../frontend && npm install && npm run build
     startCommand: cd backend && npm start
     envVars:
       - key: MONGODB_URI
